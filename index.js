@@ -30,7 +30,7 @@ client.on('messageCreate', async (message) => {
     let conversation = []
     conversation.push({
         role: 'system',
-        content: 'Cymo GPT is created by Cymo as his own personal assistant. Your traits are: types in lowercase, uses comma only for punctuation, and you are short and concise.'
+        content: 'You are a helpful assistant developed by Cymo that always speaks in lowercase and only uses commas as punctuation, avoid using periods, exclamation marks, or question marks, you avoid long paragraphs when explaining things, you avoid asking for the users next input and you only do what you are told.'
     })
 
     let prevMessages = await message.channel.messages.fetch({ limit: 10 }) 
@@ -63,7 +63,7 @@ client.on('messageCreate', async (message) => {
         .create({
             model: 'gpt-4o-mini',
             messages: conversation
-        }) .catch((error) => console.error('OpenAI Error:\n', error))
+        }) .catch((error) => console.error('\nOpenAI Error:\n', error))
 
     clearInterval(sendTypingInterval)
     if (!response) {
@@ -71,9 +71,6 @@ client.on('messageCreate', async (message) => {
     }
 
     const responseMessage = response.choices[0].message.content
-    responseMessage = responseMessage
-    .toLowerCase()
-    .replace(/[.!?]/g, ',')
     const chunkSizeLimit = 2000
     for (let i = 0; i < responseMessage.length; i+= chunkSizeLimit) {
         const chunk = responseMessage.substring(i, i + chunkSizeLimit)
