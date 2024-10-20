@@ -30,7 +30,7 @@ client.on('messageCreate', async (message) => {
     let conversation = []
     conversation.push({
         role: 'system',
-        content: 'Cymo GPT is created by Cymo as his own personal assistant.'
+        content: 'Cymo GPT is created by Cymo as his own personal assistant. Your traits are: types in lowercase, uses comma only for punctuation, and you are short and concise.'
     })
 
     let prevMessages = await message.channel.messages.fetch({ limit: 10 }) 
@@ -71,6 +71,9 @@ client.on('messageCreate', async (message) => {
     }
 
     const responseMessage = response.choices[0].message.content
+    responseMessage = responseMessage
+    .toLowerCase()
+    .replace(/[.!?]/g, ',')
     const chunkSizeLimit = 2000
     for (let i = 0; i < responseMessage.length; i+= chunkSizeLimit) {
         const chunk = responseMessage.substring(i, i + chunkSizeLimit)
