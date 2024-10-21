@@ -1,16 +1,15 @@
 require('dotenv/config')
-const { Client } = require('discord.js')
+const { Client, ActivityType, EmbedBuilder, PermissionsBitField, Permissions } = require('discord.js')
 const { OpenAI } = require('openai')
 
-const client = new Client({
-    intents: ['Guilds', 'GuildMembers', 'GuildMessages', 'MessageContent']
+const client = new Client({ intents: ['Guilds', 'GuildMembers', 'GuildMessages', 'MessageContent'] })
+
+client.on('ready', (bot) => {
+    console.log(`\n${bot.user.username} is ready!`)
+    client.user.setActivity('your messages...', { type: ActivityType.Listening });
 })
 
-client.on('ready', () => {
-    console.log('\nThe bot is online and waiting for your response.')
-})
-
-const IGNORE_PREFIX = "!"
+const PREFIX = "<0>"
 const CHANNELS = ['1297443219365298207']
 
 const openAI = new OpenAI({
@@ -19,14 +18,20 @@ const openAI = new OpenAI({
 
 client.on('messageCreate', async (message) => {
     if (message.author.bot) return;
-    if (message.content.startsWith(IGNORE_PREFIX)) return;
     if (!CHANNELS.includes(message.channelId) && !message.mentions.users.has(client.user.id)) return;
+    if (!message.content.startsWith(PREFIX)) return;
+    if (message.content === 'ping') {
+        msg.reply('pong')
+        console.log('ping triggered')
+    }
 
+    // Displays typing when replying
     await message.channel.sendTyping()
     const sendTypingInterval = setInterval(() => {
         message.channel.sendTyping()
     }, 5000)
 
+    // Starting traits of bot
     let conversation = []
     conversation.push({
         role: 'system',
@@ -79,4 +84,5 @@ client.on('messageCreate', async (message) => {
     }
 })
 
+// This should be at the very end
 client.login(process.env.TOKEN)
