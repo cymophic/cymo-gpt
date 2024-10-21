@@ -1,15 +1,35 @@
 require('dotenv/config')
-const { Client, ActivityType, EmbedBuilder, PermissionsBitField, Permissions } = require('discord.js')
+const { Client, ActivityType, GatewayIntentBits, SlashCommandBuilder, EmbedBuilder, PermissionsBitField, Permissions } = require('discord.js')
 const { OpenAI } = require('openai')
 
-const client = new Client({ intents: ['Guilds', 'GuildMembers', 'GuildMessages', 'MessageContent'] })
+const client = new Client({
+	intents: [
+		GatewayIntentBits.Guilds,
+		GatewayIntentBits.GuildMessages,
+		GatewayIntentBits.MessageContent,
+		GatewayIntentBits.GuildMembers,
+	]
+})
 
 client.on('ready', (bot) => {
     console.log(`\n${bot.user.username} is ready!`)
-    client.user.setActivity('your messages...', { type: ActivityType.Listening });
+    client.user.setActivity('messages', { type: ActivityType.Listening });
+
+    const ping = new SlashCommandBuilder()
+    .setName('ping')
+    .setDescription('Replies with pong!')
+
+    client.application.commands.create(ping)
 })
 
-const PREFIX = "<0>"
+client.on('interactionCreate', (interaction) => {
+    if (!interaction.isChatInputCommand()) return;
+    if (interaction.commandName === 'ping') {
+        interaction.reply('pong')
+    }
+})
+
+const PREFIX_IGNORE = "<0>"
 const CHANNELS = ['1297443219365298207']
 
 const openAI = new OpenAI({
@@ -19,11 +39,7 @@ const openAI = new OpenAI({
 client.on('messageCreate', async (message) => {
     if (message.author.bot) return;
     if (!CHANNELS.includes(message.channelId) && !message.mentions.users.has(client.user.id)) return;
-    if (!message.content.startsWith(PREFIX)) return;
-    if (message.content === 'ping') {
-        msg.reply('pong')
-        console.log('ping triggered')
-    }
+    if (message.content.startsWith(PREFIX_IGNORE)) return;
 
     // Displays typing when replying
     await message.channel.sendTyping()
@@ -43,7 +59,7 @@ client.on('messageCreate', async (message) => {
 
     prevMessages.forEach((msg) => {
         if (msg.author.bot && msg.author.id !== client.user.id) return;
-        if (msg.content.startsWith(IGNORE_PREFIX)) return;
+        if (msg.content.startsWith(PREFIX_IGNORE)) return;
 
         const username = msg.author.username.replace(/\s+/g, '_').replace(/[^\w\s]/gi, '');
 
