@@ -1,9 +1,9 @@
 const { OpenAI } = require('openai')
 
 require('dotenv/config')
-const getKey = process.env
+const getSecret = process.env
 const openAI = new OpenAI({
-    apiKey: getKey.OPENAI_KEY
+    apiKey: getSecret.OPENAI_KEY
 })
 
 
@@ -12,7 +12,7 @@ const buildAI = async (message, bot) => {
 
     conversation.push({
         role: 'system',
-        content: 'You are a helpful assistant developed by Cymo that always speaks in lowercase and only uses commas as punctuation, avoid using periods, exclamation marks, or question marks, you avoid long paragraphs when explaining things, you avoid asking for the users next input and you only do what you are told.'
+        content: getSecret.AI_PROMPT
     })
 
     
