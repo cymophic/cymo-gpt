@@ -42,8 +42,8 @@ bot.on(Events.MessageCreate, async (message) => {
         // if (message.content.startsWith(ignorePrefix)) return;
 
     //-- Reset inactivity timer
-    if (inactivityTimer) clearTimeout(inactivityTimer);
-    setBotStatus(PresenceUpdateStatus.Online, ActivityType.Listening, 'you');
+    if (inactivityTimer) clearTimeout(inactivityTimer)
+    setBotStatus(PresenceUpdateStatus.Online, ActivityType.Listening, 'you')
 
     //-- Sends Discord Typing Behavior
     await message.channel.sendTyping()
@@ -63,7 +63,7 @@ bot.on(Events.MessageCreate, async (message) => {
         }
 
         //-- Cuts Message Every 2000 Characters
-        const responseMessage = botResponse.choices[0].message.content;
+        const responseMessage = botResponse.choices[0].message.content
         const chunkSizeLimit = 2000
         for (let i = 0; i < responseMessage.length; i+= chunkSizeLimit) {
             const chunk = responseMessage.substring(i, i + chunkSizeLimit)
@@ -75,9 +75,9 @@ bot.on(Events.MessageCreate, async (message) => {
     
     // START INACTIVITY TRACKER
     inactivityTimer = setTimeout(() => {
-    setBotStatus(PresenceUpdateStatus.DoNotDisturb, ActivityType.Watching, 'messages'); 
+        setBotStatus(PresenceUpdateStatus.DoNotDisturb, ActivityType.Watching, 'messages')
     }, 10000); // 10000 milliseconds = 10 seconds
 })
 
-const getKey = process.env
-bot.login(getKey.BOT_TOKEN);
+const getSecret = process.env
+bot.login(getSecret.BOT_TOKEN)
