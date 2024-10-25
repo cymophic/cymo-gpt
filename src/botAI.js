@@ -16,7 +16,7 @@ const buildAI = async (message, bot) => {
     })
 
     
-    let messageHistory = await message.channel.messages.fetch({ limit: 10 })
+    let messageHistory = await message.channel.messages.fetch({ limit: 30 })
     messageHistory.reverse()
 
     messageHistory.forEach((chat) => {
