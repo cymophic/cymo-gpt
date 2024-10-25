@@ -24,13 +24,15 @@ const generateAIResponse = async (conversation) => {
 
 // LOADS STARTING PROMPT AND OTHER MESSAGES INTO AN ARRAY
 const getConversations = async (message, bot) => {
-
     let conversation = []
 
-    //-- Gets Starting Prompt
+    //-- Feeds Necessary Starting Details to AI
     conversation.push({
         role: 'system',
         content: getSecret.STARTING_PROMPT
+    }, {
+        role: 'system',
+        content: `You are talking to ${message.member.user.globalName}, or ${message.author.username}`
     })
     
     //-- Gets Past # Messages (# = Limit)
