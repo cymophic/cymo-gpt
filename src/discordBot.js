@@ -49,9 +49,7 @@ bot.on(Events.MessageCreate, async (message) => {
     }, 5000)
 
         let botResponse
-
-        //-- Gets Messages and Response
-        try {
+        try { //-- Gets Messages and Response
             const conversation = await getConversations(message, bot);
             botResponse = await generateAIResponse(conversation);
         } catch (error) {

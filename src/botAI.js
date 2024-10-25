@@ -34,7 +34,7 @@ const getConversations = async (message, bot) => {
     })
     
     //-- Gets Past # Messages (# = Limit)
-    let messageHistory = await message.channel.messages.fetch({ limit: 30 })
+    let messageHistory = await message.channel.messages.fetch({ limit: 10 })
     messageHistory.reverse()
 
     messageHistory.forEach((chat) => {
@@ -44,7 +44,31 @@ const getConversations = async (message, bot) => {
 
         //-- Filters chat from user
         if (chat.author.id !== bot.user.id) {
-            
+
+            let imageUrls
+            if (chat.attachments.size > 0) { //-- Checks if Message has Attachments
+                const imageAttachments = chat.attachments.filter(attachment => { //-- Filter attachments to include only images
+                    return attachment.contentType && attachment.contentType.startsWith('image/');
+                })
+                
+                //-- Joins URLs together if multiple images are detected.
+                imageUrls = imageAttachments.map(attachment => attachment.url).join('\n');
+
+                conversation.push({
+                    role: 'user',
+                    name: senderUsername,
+                    content: [{
+                        type: 'text',
+                        text: 'describe this image'
+                    }, {
+                        type: 'image_url',
+                        image_url: {
+                            url: imageUrls
+                        }
+                    }]
+                }) 
+            }
+    
             conversation.push({
                 role: 'user',
                 name: senderUsername,
