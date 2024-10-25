@@ -48,7 +48,7 @@ bot.on(Events.MessageCreate, async (message) => {
         message.channel.sendTyping()
     }, 5000)
 
-        let botResponse;
+        let botResponse
 
         //-- Gets Messages and Response
         try {
@@ -57,6 +57,7 @@ bot.on(Events.MessageCreate, async (message) => {
         } catch (error) {
             clearInterval(sendTypingInterval);
             message.reply("I'm having some trouble at the moment. Let's talk again later.");
+            console.error("Error: ", error)
             return;
         }
 
