@@ -22,7 +22,7 @@ const generateAIResponse = async (conversation) => {
     }
 }
 
-// GETS STARTING PROMPT AND OTHER MESSAGES INTO AN ARRAY
+// LOADS STARTING PROMPT AND OTHER MESSAGES INTO AN ARRAY
 const getConversations = async (message, bot) => {
 
     let conversation = []
@@ -45,37 +45,36 @@ const getConversations = async (message, bot) => {
         //-- Filters chat from user
         if (chat.author.id !== bot.user.id) {
 
-            let imageUrls
+            let imageURL
             if (chat.attachments.size > 0) { //-- Checks if Message has Attachments
                 const imageAttachments = chat.attachments.filter(attachment => { //-- Filter attachments to include only images
                     return attachment.contentType && attachment.contentType.startsWith('image/');
                 })
                 
-                //-- Joins URLs together if multiple images are detected.
-                imageUrls = imageAttachments.map(attachment => attachment.url).join('\n');
+                if (imageAttachments.size > 0) { //-- Gets the latest image URL only
+                    imageURL = imageAttachments.first().url;  
+                }
 
-                conversation.push({
-                    role: 'user',
-                    name: senderUsername,
-                    content: [{
-                        type: 'text',
-                        text: 'describe this image'
-                    }, {
-                        type: 'image_url',
-                        image_url: {
-                            url: imageUrls
-                        }
-                    }]
-                }) 
-            }
+                //-- Filters whether its an image or a message that's fed to AI 
+                if (imageURL) { //-- For Image
+                    conversation.push({ 
+                        role: 'user',
+                        name: senderUsername,
+                        content: [
+                            { type: 'text', text: chat.content || 'describe this image' },
+                            { type: 'image_url', image_url: { url: imageURL, detail: 'low' }}
+                        ]
+                    });
+                } else { //-- For Normal Message
+                    conversation.push({
+                        role: 'user',
+                        name: senderUsername,
+                        content: chat.content
+                    });
+                }
     
-            conversation.push({
-                role: 'user',
-                name: senderUsername,
-                content: chat.content
-            }) 
-
-            return;
+                return;
+            }
         } 
 
         //-- Gets chats from bot
