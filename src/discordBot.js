@@ -1,5 +1,5 @@
 // INITIALIZATIONS
-const { buildAI, generateResponse } = require('./botAI')
+const { getConversations, generateAIResponse } = require('./botAI')
 const { Client, GatewayIntentBits, ActivityType, Events, PresenceUpdateStatus } = require('discord.js')
 require('dotenv/config')
 
@@ -33,9 +33,6 @@ bot.on(Events.ClientReady, () => {
 // ON CHATTING
 bot.on(Events.MessageCreate, async (message) => {
 
-    //-- Message Variables
-    const messageText = message.content
-
     //-- Constraints
     if (message.author.bot) return
     if (!allowedChannels.includes(message.channelId) && !message.mentions.users.has(bot.user.id)) return
@@ -54,8 +51,8 @@ bot.on(Events.MessageCreate, async (message) => {
         //-- Reply
         let botResponse;
         try {
-            const conversation = await buildAI(message, bot);
-            botResponse = await generateResponse(conversation);
+            const conversation = await getConversations(message, bot);
+            botResponse = await generateAIResponse(conversation);
         } catch (error) {
             clearInterval(sendTypingInterval);
             message.reply("I'm having some trouble at the moment. Let's talk again later.");
