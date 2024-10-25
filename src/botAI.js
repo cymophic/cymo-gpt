@@ -42,15 +42,19 @@ const getConversations = async (message, bot) => {
         if (chat.author.bot && chat.author.id !== bot.user.id) return;
             // if (chat.content.startsWith(PREFIX_IGNORE)) return;
 
+        //-- Filters chat from user
         if (chat.author.id !== bot.user.id) {
+            
             conversation.push({
                 role: 'user',
                 name: senderUsername,
                 content: chat.content
             }) 
-            return;
-        }
 
+            return;
+        } 
+
+        //-- Gets chats from bot
         conversation.push({
             role: 'assistant',
             name: senderUsername,
