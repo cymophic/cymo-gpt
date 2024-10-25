@@ -48,8 +48,9 @@ bot.on(Events.MessageCreate, async (message) => {
         message.channel.sendTyping()
     }, 5000)
 
-        //-- Reply
         let botResponse;
+
+        //-- Gets Messages and Response
         try {
             const conversation = await getConversations(message, bot);
             botResponse = await generateAIResponse(conversation);
@@ -70,11 +71,12 @@ bot.on(Events.MessageCreate, async (message) => {
 
     clearInterval(sendTypingInterval) 
     
-    // START INACTIVITY TRACKER
+    //-- Starts Inactivity Tracker
     inactivityTimer = setTimeout(() => {
         setBotStatus(PresenceUpdateStatus.DoNotDisturb, ActivityType.Watching, 'messages')
     }, 10000); // 10000 milliseconds = 10 seconds
 })
 
+// ASSIGNS BOT WITH PERSONAL TOKEN FROM DISCORD
 const getSecret = process.env
 bot.login(getSecret.BOT_TOKEN)
