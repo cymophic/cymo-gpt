@@ -1,0 +1,13 @@
+{
+    "botDefaultStatus": {
+        "status": "dnd",
+        "activityType": "WATCHING",
+        "activityName": "messages"
+    },
+    "defaultPrefix": ".",
+    "allowedChannels": ["1297443219365298207"],
+    "messageHistoryLimit": 10,
+    "typingInterval": 5000,
+    "responseChunkSize": 2000,
+    "inactivityTimeout": 10000
+}

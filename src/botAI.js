@@ -1,6 +1,7 @@
 const { OpenAI } = require('openai')
-
 require('dotenv/config')
+
+const config = require('../config/config.json');
 
 // LOGS BOT IN USING PERSONAL TOKEN FROM OPENAI
 const getSecret = process.env
@@ -36,7 +37,7 @@ const getConversations = async (message, bot) => {
     })
     
     //-- Gets Past # Messages (# = Limit)
-    let messageHistory = await message.channel.messages.fetch({ limit: 10 })
+    let messageHistory = await message.channel.messages.fetch({ limit: config.messageHistoryLimit })
     messageHistory.reverse()
 
     messageHistory.forEach((chat) => {

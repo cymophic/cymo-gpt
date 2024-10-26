@@ -1,11 +1,10 @@
 // INITIALIZATIONS
-const { getConversations, generateAIResponse } = require('./botAI')
-const { Client, GatewayIntentBits, ActivityType, Events, PresenceUpdateStatus } = require('discord.js')
 require('dotenv/config')
+const { Client, GatewayIntentBits, ActivityType, Events, PresenceUpdateStatus } = require('discord.js')
 
-// BOT SETTINGS
-const allowedChannels = ['1297443219365298207']
-const defaultPrefix = "."
+const config = require('../config/config.json');
+const { getConversations, generateAIResponse } = require('./botAI')
+
 const bot = new Client({
     intents: [
 		GatewayIntentBits.Guilds,
@@ -17,12 +16,21 @@ const bot = new Client({
 
 // TIMER TO TRACK INACTIVITY
 let inactivityTimer = null;
-const setBotStatus = (status, type, activityName) => {
-    bot.user.setPresence({
-        activities: [{ name: activityName, type: type }],
-        status: status
-    });
-}
+// SETS BOT STATUS
+const setBotStatus = (
+    status = config.botDefaultStatus.status,
+    type = ActivityType[config.botDefaultStatus.activityType],
+    activityName = config.botDefaultStatus.activityName
+) => {
+    try {
+        bot.user.setPresence({
+            activities: [{ name: activityName, type: type }],
+            status: status
+        });
+    } catch (error) {
+        console.error("Failed to set bot status:", error);
+    }
+};
 
 // ON START
 bot.on(Events.ClientReady, () => {
@@ -35,8 +43,7 @@ bot.on(Events.MessageCreate, async (message) => {
 
     //-- Constraints
     if (message.author.bot) return
-    if (!allowedChannels.includes(message.channelId) && !message.mentions.users.has(bot.user.id)) return
-        // if (message.content.startsWith(ignorePrefix)) return;
+    if (!config.allowedChannels.includes(message.channelId) && !message.mentions.users.has(bot.user.id)) return
 
     //-- Reset inactivity timer
     if (inactivityTimer) clearTimeout(inactivityTimer)
@@ -46,7 +53,7 @@ bot.on(Events.MessageCreate, async (message) => {
     await message.channel.sendTyping()
     const sendTypingInterval = setInterval(() => {
         message.channel.sendTyping()
-    }, 5000)
+    }, config.typingInterval)
 
         let botResponse
         try { //-- Gets Messages and Response
@@ -61,7 +68,7 @@ bot.on(Events.MessageCreate, async (message) => {
 
         //-- Cuts Message Every 2000 Characters
         const responseMessage = botResponse.choices[0].message.content
-        const chunkSizeLimit = 2000
+        const chunkSizeLimit = config.responseChunkSize
         for (let i = 0; i < responseMessage.length; i+= chunkSizeLimit) {
             const chunk = responseMessage.substring(i, i + chunkSizeLimit)
 
@@ -73,7 +80,7 @@ bot.on(Events.MessageCreate, async (message) => {
     //-- Starts Inactivity Tracker
     inactivityTimer = setTimeout(() => {
         setBotStatus(PresenceUpdateStatus.DoNotDisturb, ActivityType.Watching, 'messages')
-    }, 10000); // 10000 milliseconds = 10 seconds
+    }, config.inactivityTimeout); // 10000 milliseconds = 10 seconds
 })
 
 // ASSIGNS BOT WITH PERSONAL TOKEN FROM DISCORD
