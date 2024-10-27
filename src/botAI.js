@@ -13,7 +13,7 @@ const openAI = new OpenAI({
 const generateAIResponse = async (conversation) => {
     try {
         const response = await openAI.chat.completions.create({
-            model: 'gpt-4o-mini',
+            model: 'gpt-4o',
             messages: conversation,
         })
         return response
