@@ -1,5 +1,5 @@
 {
-    "AImodel": "gpt-4o-mini",
+    "AImodel": "gpt-4o",
     "botDefaultStatus": {
         "status": "dnd",
         "activityType": "WATCHING",
