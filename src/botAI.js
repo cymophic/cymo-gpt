@@ -16,14 +16,18 @@ const generateAIResponse = async (conversation) => {
             model: config.AImodel, // chatgpt-4o-latest, gpt-4o, gpt-4o-mini
             messages: conversation,
         })
+        console.log(
+            `Tokens Used From Prompt: ${response.usage.prompt_tokens}\n` +
+            `Tokens Used From Prompt: ${response.usage.completion_tokens}\n` +
+            `Total Tokens Used: ${response.usage.total_tokens}\n`
+        )
         return response
     } catch (error) {
         if (error.response) {
             console.error('OpenAI API Error:', error.response.data);
         } else {
             console.error('An unexpected error occurred:', error.message || error);
-        }
-        throw new Error("Failed to get response from OpenAI");
+        } throw new Error("Failed to get response from OpenAI");
     }
 }
 
