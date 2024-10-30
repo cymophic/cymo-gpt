@@ -39,6 +39,13 @@ const getConversations = async (message, bot) => {
         role: 'system',
         content: `You are talking to ${message.member.user.globalName}, or ${message.author.username}`
     })
+
+    if (message.author.id === getSecret.DC_DEV_ID) {
+        conversation.push({
+            role: 'system',
+            content: 'You are currently talking to cymo, your developer.'
+        })
+    }
     
     //-- Gets Past # Messages (# = Limit)
     let messageHistory = await message.channel.messages.fetch({ limit: config.messageHistoryLimit })
