@@ -18,8 +18,12 @@ const generateAIResponse = async (conversation) => {
         })
         return response
     } catch (error) {
-        console.error('\nOpenAI Error:\n', error)
-        throw new Error("Failed to get response from OpenAI")
+        if (error.response) {
+            console.error('OpenAI API Error:', error.response.data);
+        } else {
+            console.error('An unexpected error occurred:', error.message || error);
+        }
+        throw new Error("Failed to get response from OpenAI");
     }
 }
 
