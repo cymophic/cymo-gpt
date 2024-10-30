@@ -1,5 +1,5 @@
 {
-    "AImodel": "chatgpt-4o-latest",
+    "AImodel": "gpt-4o",
     "botDefaultStatus": {
         "status": "dnd",
         "activityType": "WATCHING",
