@@ -1,2 +1,1 @@
-require('./src/discordBot');
-
+require("./src/discordBot");
