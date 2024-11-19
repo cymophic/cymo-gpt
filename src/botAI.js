@@ -18,8 +18,8 @@ const generateAIResponse = async (conversation) => {
         });
         console.log(
             `Tokens Used From Prompt: ${response.usage.prompt_tokens}\n` +
-                `Tokens Used From Prompt: ${response.usage.completion_tokens}\n` +
-                `Total Tokens Used: ${response.usage.total_tokens}\n`
+            `Tokens Used From Prompt: ${response.usage.completion_tokens}\n` +
+            `Total Tokens Used: ${response.usage.total_tokens}\n`
         );
         return response;
     } catch (error) {
