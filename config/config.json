@@ -5,7 +5,7 @@
         "activityType": "WATCHING",
         "activityName": "messages"
     },
-    "defaultPrefix": ".",
+    "defaultPrefix": "/",
     "allowedChannels": ["1297443219365298207"],
     "messageHistoryLimit": 10,
     "typingInterval": 5000,

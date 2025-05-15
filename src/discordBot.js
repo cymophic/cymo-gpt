@@ -6,6 +6,7 @@ const {
     ActivityType,
     Events,
     PresenceUpdateStatus,
+    SlashCommandBuilder,
 } = require("discord.js");
 
 const config = require("../config/config.json");
@@ -46,7 +47,20 @@ bot.on(Events.ClientReady, () => {
         ActivityType.Watching,
         "messages"
     );
+
+    //-- Create Ping Command
+    const ping = new SlashCommandBuilder()
+    .setName('ping')
+    .setDescription('Replies with pong!')
+    bot.application.commands.create(ping)
 });
+
+bot.on('interactionCreate', (interaction) => {
+    if (!interaction.isChatInputCommand()) return;
+    if (interaction.commandName === 'ping') {
+        interaction.reply('pong!')
+    }
+})
 
 // ON CHATTING
 bot.on(Events.MessageCreate, async (message) => {
@@ -55,8 +69,7 @@ bot.on(Events.MessageCreate, async (message) => {
     if (
         !config.allowedChannels.includes(message.channelId) &&
         !message.mentions.users.has(bot.user.id)
-    )
-        return;
+    ) return;
 
     //-- Reset inactivity timer
     if (inactivityTimer) clearTimeout(inactivityTimer);
